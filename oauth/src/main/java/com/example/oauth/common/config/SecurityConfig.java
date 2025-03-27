@@ -1,6 +1,7 @@
 package com.example.oauth.common.config;
 
 import com.example.oauth.common.auth.JwtTokenFilter;
+import com.example.oauth.member.service.GoogleOauth2LoginSuccess;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,9 +21,11 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final JwtTokenFilter authFilter;
+    private final GoogleOauth2LoginSuccess googleOauth2LoginSuccess;
 
-    public SecurityConfig(JwtTokenFilter authFilter) {
+    public SecurityConfig(JwtTokenFilter authFilter, GoogleOauth2LoginSuccess googleOauth2LoginSuccess) {
         this.authFilter = authFilter;
+        this.googleOauth2LoginSuccess = googleOauth2LoginSuccess;
     }
 
     @Bean
@@ -43,11 +46,14 @@ public class SecurityConfig {
                 //      .authenticated() : 모든 요청에 대해서 Authentication 객체가 생성되기를 요구.
                 .authorizeHttpRequests(a->a.requestMatchers
                         ("/member/create","member/doLogin","member/refresh-token",
-                                "product/list","member/google/doLogin","member/kakao/doLogin")
+                                "product/list","member/google/doLogin","member/kakao/doLogin",
+                                "/oauth2/**")
                         .permitAll().anyRequest().authenticated())
                 //      token을 검증하고, token을 통해 Authentication 생성
                 //      UsernamePasswordAuthenticationFilter 이 클래스에서 폼 로그인 인증을 처리한다.
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+//                oauth로그인이 성공했을 경우 실행할 클래스 정의
+                .oauth2Login(o->o.successHandler(googleOauth2LoginSuccess))
                 .build();
     }
 

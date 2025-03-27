@@ -12,6 +12,24 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+#    ???? ???? ?? oauth???? ?? ?? ??
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: xxxx
+            client-secret: xxxx
+            scope: openid, email, profile
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            authorization-grant-type: authorization_code
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+
 jwt:
   expiration: 50000
   # ??? ? 32? ?? ??.(???? ?? ??)
@@ -20,12 +38,12 @@ jwt:
 
   # beyoundrefreshtokensecretkeybeyoundrefreshtokensecretkeybeyoundrefreshtokensecretkey
   expirationRt: 288000
-  secretKeyRt: yyyy
+  secretKeyRt: xxxx
 oauth:
   google:
-    client-id: zzzz
-    client-secret: aaaa
+    client-id: xxxx
+    client-secret: xxxx
     redirect-uri: http://localhost:3000/oauth/google/redirect
   kakao:
-    client-id: bbbb
+    client-id: xxxx
     redirect-uri: http://localhost:3000/oauth/kakao/redirect
